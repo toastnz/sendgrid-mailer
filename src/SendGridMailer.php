@@ -4,6 +4,7 @@ namespace Toast\SSSendGrid;
 
 use SilverStripe\Core\Convert;
 use SilverStripe\Core\Config\Config;
+use SilverStripe\Control\Email\Email;
 use SilverStripe\Control\Email\Mailer;
 
 class SendGridMailer implements Mailer
@@ -19,12 +20,14 @@ class SendGridMailer implements Mailer
         $sendGridEmail = new \SendGrid\Mail\Mail(); 
         $sendGridEmail->setSubject($email->getSubject());
 
-        $from = $email->getFrom();
+        $emailsFrom = Email::getSendAllEmailsFrom();
+        $from = is_array($emailsFrom) && count($emailsFrom) ? $emailsFrom : $email->getFrom();
         if ($from && count($from)) {
             $fromEmail = array_keys($from)[0];
             $fromName = $from[$fromEmail];
             $sendGridEmail->setFrom($fromEmail, $fromName);
         }
+
 
         $replyTo = $email->getReplyTo();
         if ($replyTo && count($replyTo)) {
@@ -32,21 +35,27 @@ class SendGridMailer implements Mailer
             $replyToName = $replyTo[$replyToEmail];
             $sendGridEmail->setReplyTo($replyToEmail, $replyToName);
         }
-
-        if (is_array($email->getTo())) {
-            foreach($email->getTo() as $toEmail => $toName) {
+        
+        $emailsTo = Email::getSendAllEmailsTo();
+        $to = is_array($emailsTo) && count($emailsTo) ? $emailsTo : $email->getTo();
+        if (is_array($to)) {
+            foreach($to as $toEmail => $toName) {
                 $sendGridEmail->addTo($toEmail, $toName);
             }
         }
 
-        if (is_array($email->getBCC())) {
-            foreach($email->getBCC() as $bccEmail => $bccName) {
+        $emailsBCC = Email::getBCCAllEmailsTo();
+        $BCC = is_array($emailsBCC) && count($emailsBCC) ? $emailsBCC : $email->getBCC();
+        if (is_array($BCC)) {
+            foreach($BCC as $bccEmail => $bccName) {
                 $sendGridEmail->addBcc($bccEmail, $bccName);
             }
         }
 
-        if (is_array($email->getCC())) {
-            foreach($email->getCC() as $ccEmail => $ccName) {
+        $emailsCC = Email::getCCAllEmailsTo();
+        $CC = is_array($emailsCC) && count($emailsCC) ? $emailsCC : $email->getCC();
+        if (is_array($CC)) {
+            foreach($CC as $ccEmail => $ccName) {
                 $sendGridEmail->addCc($ccEmail, $ccName);
             }
         }
