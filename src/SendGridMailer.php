@@ -66,8 +66,8 @@ class SendGridMailer implements Mailer
             }
         }
 
-        $sendGridEmail->addContent('text/html', $email->getBody());
         $sendGridEmail->addContent('text/plain', Convert::xml2raw($email->getBody()));
+        $sendGridEmail->addContent('text/html', $email->getBody());
 
         $sendgrid = new \SendGrid($apiKey);
 
