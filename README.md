@@ -1,4 +1,4 @@
-# SilverStripe SendGrid Mailer 
+# SilverStripe SendGrid Mailer
 
 Simple mailer module that uses SendGrid API to send emails.
 
@@ -21,6 +21,7 @@ Add the following to your `app.yml`:
 ```yaml
 Toast\SSSendGrid\SendGridMailer:
   api_key: 'YOUR_SENDGRID_API_KEY'
+  default_email: 'from@example.com' # Required for password reset form
 ```
 
 ## Usage

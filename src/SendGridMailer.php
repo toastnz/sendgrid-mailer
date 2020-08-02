@@ -10,14 +10,14 @@ use SilverStripe\Control\Email\Mailer;
 class SendGridMailer implements Mailer
 {
 
-    public function send($email) 
+    public function send($email)
     {
 
         if (!$apiKey = Config::inst()->get(self::class, 'api_key')) {
             user_error(self::class . ' requires a SendGrid \'api_key\'. Please add it to your YML configuration.');
         }
 
-        $sendGridEmail = new \SendGrid\Mail\Mail(); 
+        $sendGridEmail = new \SendGrid\Mail\Mail();
         $sendGridEmail->setSubject($email->getSubject());
 
         $emailsFrom = Email::getSendAllEmailsFrom();
@@ -26,6 +26,11 @@ class SendGridMailer implements Mailer
             $fromEmail = array_keys($from)[0];
             $fromName = $from[$fromEmail];
             $sendGridEmail->setFrom($fromEmail, $fromName);
+        }elseif ($from = Config::inst()->get(self::class, 'default_email')) {
+            $sendGridEmail->setFrom($from);
+        }else{
+            user_error(self::class . ' requires a SendGrid \'default_email\'. Please add it to your YML configuration.');
+            exit;
         }
 
 
@@ -35,7 +40,7 @@ class SendGridMailer implements Mailer
             $replyToName = $replyTo[$replyToEmail];
             $sendGridEmail->setReplyTo($replyToEmail, $replyToName);
         }
-        
+
         $emailsTo = Email::getSendAllEmailsTo();
         $to = is_array($emailsTo) && count($emailsTo) ? $emailsTo : $email->getTo();
         if (is_array($to)) {
@@ -81,7 +86,7 @@ class SendGridMailer implements Mailer
 
         } catch (\Exception $e) {
             return false;
-        }        
+        }
 
     }
 
