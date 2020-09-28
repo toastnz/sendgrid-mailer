@@ -27,7 +27,6 @@ Add the following to your `_ss_environment.php`:
 
 ```.env
 define('SS_SEND_ALL_EMAILS_FORM', 'pass');
-  : ''
 ```
 
 ## Usage
