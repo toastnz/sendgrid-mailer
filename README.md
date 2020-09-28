@@ -26,7 +26,8 @@ Toast\SSSendGrid\SendGridMailer:
 Add the following to your `_ss_environment.php`:
 
 ```.env
-  SS_SEND_ALL_EMAILS_FORM: 'from@example.com'
+define('SS_SEND_ALL_EMAILS_FORM', 'pass');
+  : ''
 ```
 
 ## Usage
