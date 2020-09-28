@@ -2,11 +2,6 @@
 
 namespace Toast\SSSendGrid;
 
-use SilverStripe\Core\Convert;
-use SilverStripe\Core\Config\Config;
-use SilverStripe\Control\Email\Email;
-use SilverStripe\Control\Email\Mailer;
-
 class SendGridMailer implements Mailer
 {
 
@@ -18,9 +13,9 @@ class SendGridMailer implements Mailer
         }
 
         $sendGridEmail = new \SendGrid\Mail\Mail(); 
-        $sendGridEmail->setSubject($email->getSubject());
+        $sendGridEmail->setSubject($email->subject);
 
-        $emailsFrom = Email::getSendAllEmailsFrom();
+        $emailsFrom = Email::config()->send_all_emails_to;
         $from = is_array($emailsFrom) && count($emailsFrom) ? $emailsFrom : $email->getFrom();
         if ($from && count($from)) {
             $fromEmail = array_keys($from)[0];
@@ -29,14 +24,14 @@ class SendGridMailer implements Mailer
         }
 
 
-        $replyTo = $email->getReplyTo();
-        if ($replyTo && count($replyTo)) {
-            $replyToEmail = array_keys($replyTo)[0];
-            $replyToName = $replyTo[$replyToEmail];
-            $sendGridEmail->setReplyTo($replyToEmail, $replyToName);
-        }
+        // $replyTo = $email->getReplyTo();
+        // if ($replyTo && count($replyTo)) {
+        //     $replyToEmail = array_keys($replyTo)[0];
+        //     $replyToName = $replyTo[$replyToEmail];
+        //     $sendGridEmail->setReplyTo($replyToEmail, $replyToName);
+        // }
         
-        $emailsTo = Email::getSendAllEmailsTo();
+        $emailsTo = Email::config()->send_all_emails_to;
         $to = is_array($emailsTo) && count($emailsTo) ? $emailsTo : $email->getTo();
         if (is_array($to)) {
             foreach($to as $toEmail => $toName) {
@@ -44,7 +39,7 @@ class SendGridMailer implements Mailer
             }
         }
 
-        $emailsBCC = Email::getBCCAllEmailsTo();
+        $emailsBCC = Email::config()->bcc_all_emails_to;
         $BCC = is_array($emailsBCC) && count($emailsBCC) ? $emailsBCC : $email->getBCC();
         if (is_array($BCC)) {
             foreach($BCC as $bccEmail => $bccName) {
@@ -52,7 +47,7 @@ class SendGridMailer implements Mailer
             }
         }
 
-        $emailsCC = Email::getCCAllEmailsTo();
+        $emailsCC = Email::config()->cc_all_emails_to;
         $CC = is_array($emailsCC) && count($emailsCC) ? $emailsCC : $email->getCC();
         if (is_array($CC)) {
             foreach($CC as $ccEmail => $ccName) {
@@ -60,10 +55,10 @@ class SendGridMailer implements Mailer
             }
         }
 
-        foreach($email->getSwiftMessage()->getChildren() as $child) {
-            if ($child instanceof \Swift_Attachment) {
+        foreach($email->attachments() as $child) {
+            // if ($child instanceof \Swift_Attachment) {
                 $sendGridEmail->addAttachment(base64_encode($child->getBody()), $child->getContentType(), $child->getFilename());
-            }
+            // }
         }
 
         $sendGridEmail->addContent('text/plain', Convert::xml2raw($email->getBody()));

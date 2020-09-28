@@ -3,7 +3,7 @@ Name: sendgridmailer
 After: emailconfig
 ---
 
-SilverStripe\Core\Injector\Injector:
-  SilverStripe\Control\Email\Mailer:
+Injector:
+  Mailer:
     class: Toast\SSSendGrid\SendGridMailer        
 

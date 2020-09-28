@@ -4,8 +4,8 @@ Simple mailer module that uses SendGrid API to send emails.
 
 ## Requirements
 
-* silverstripe/cms ^4.3.x
-* silverstripe/framework ^4.3.x
+* silverstripe/cms ^3.7.x
+* silverstripe/framework ^3.7.x
 * sendgrid/sendgrid ^7.3
 
 ## Installation
@@ -23,12 +23,18 @@ Toast\SSSendGrid\SendGridMailer:
   api_key: 'YOUR_SENDGRID_API_KEY'
 ```
 
+Add the following to your `_ss_environment.php`:
+
+```.env
+  SS_SEND_ALL_EMAILS_FORM: 'from@example.com'
+```
+
 ## Usage
 
 Simply use the Email class provided by SilverStripe framework:
 
 ```php
-$email = new SilverStripe\Control\Email\Email();
+$email = new Email();
 $email->setFrom('from@example.com', 'John Doe');
 $email->setTo('to@example.com', 'Jane Doe');
 $email->setSubject('This is a test email');

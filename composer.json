@@ -3,10 +3,7 @@
     "description": "SilverStripe SendGrid Mailer",
     "type": "silverstripe-module",
     "keywords": [
-        "silverstripe",
-        "sendgrid",
-        "mailer",
-        "email"
+        "silverstripe", "sendgrid", "mailer", "email"
     ],
     "license": "BSD-3-Clause",
     "authors": [
@@ -14,11 +11,15 @@
             "name": "Leandro Palmieri",
             "homepage": "https://toast.co.nz",
             "role": "Developer"
+        }, {
+            "name": "Hadlee Lineham",
+            "homepage": "https://toast.co.nz",
+            "role": "Developer"
         }
     ],
     "require": {
-        "silverstripe/cms": "^4.3",
-        "silverstripe/framework": "^4.3",
+        "silverstripe/cms": "^3.7",
+        "silverstripe/framework": "^3.7",
         "sendgrid/sendgrid": "^7.3",
         "composer/installers": "*"
     }
