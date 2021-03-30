@@ -6,6 +6,7 @@ use SilverStripe\Core\Convert;
 use SilverStripe\Core\Config\Config;
 use SilverStripe\Control\Email\Email;
 use SilverStripe\Control\Email\Mailer;
+use SilverStripe\Core\Environment;
 
 class SendGridMailer implements Mailer
 {
@@ -14,7 +15,9 @@ class SendGridMailer implements Mailer
     {
 
         if (!$apiKey = Config::inst()->get(self::class, 'api_key')) {
-            user_error(self::class . ' requires a SendGrid \'api_key\'. Please add it to your YML configuration.');
+            if (!$apiKey = Environment::getEnv('SENDGRID_API_KEY')) {
+                user_error(self::class . ' requires a SendGrid \'api_key\'. Please add it to your YML configuration or define SENDGRID_API_KEY in your .env file.');
+            }
         }
 
         $sendGridEmail = new \SendGrid\Mail\Mail(); 
